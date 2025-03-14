@@ -1,6 +1,6 @@
 typedef struct Node {
     char name[65];
-    char nodeType;
+    char type; // F for file and D for directory
     struct Node *childPtr;
     struct Node *siblingPtr;
     struct Node *parentPtr;

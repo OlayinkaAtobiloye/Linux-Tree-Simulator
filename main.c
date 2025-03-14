@@ -1,19 +1,14 @@
 #include "commands.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <errno.h>
 
 
-char *cmds[] = {"mkdir", "rmdir", "cd", "ls", "pwd", "creat", "rm", "save", "reload", "menu", "quit", NULL};
-int findCmd(char* cmd){
+int findCmd(char *cmd){
+    char *cmds[] = {"mkdir", "rmdir", "cd", "creat", "rm", "ls", "pwd", "save", "reload", "quit", NULL};
     int index = 0;
-    while(cmds[index]){
-        if (!strcmp(cmds[index], cmd)){
+    while (cmds[index]){
+        if (strcmp(cmds[index], cmd)==0){
             return index;
         }
         index++;
@@ -24,27 +19,27 @@ int findCmd(char* cmd){
 int main(){
     FileSystem fs;
     initialize(&fs);
-    NODE* root, cwd;
-    char line[128];
-    char command[16], pathname[64];
-    typedef int (*fptr)(FileSystem*, char*);
-    fptr fptrs[] = {mkdir_, rmdir_, cd_};
-    
-    while(1){
-        fgets(line, 128, stdin);
-        line[strlen(line)- 1] = 0;
+    char line[65];
+    char index;
+    int quit_flag = 1;
+    char command[65];
+    char pathname[65];
+    typedef int (*fptr)(FileSystem *, char *);
+    fptr fptrs[] = {mkdir_, rmdir_, cd_, creat_, rm_, ls_, pwd_, save_, reload_, quit_};
+
+    while(quit_flag){
+        printf("Enter a command: ");
+        fgets(line, 65, stdin);
         sscanf(line, "%s %s", command, pathname);
-        int index = findCmd(command);
-        // switch (index){
-        //     case 0:
-        //         mkdir(pathname);
-        //     case 1: 
-        //         rmdir(pathname);
-        //     default:
-        //         printf("Invalid command %s \n", command);
-        // }
+        index = findCmd(command);
+        if (index==-1){
+            printf("Invalid command! \n");
+            continue;
+        }
         fptrs[index](&fs, pathname);
-
+        if (strcmp(command, "quit")==0){
+            quit_flag = 0;
+        }
     }
-
+    return 1;
 }

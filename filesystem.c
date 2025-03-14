@@ -12,7 +12,7 @@ void initialize(FileSystem *fs){
 NODE* newDirectoryNode(char *basename){
     NODE* newDir = (NODE *)malloc(sizeof(NODE));
     strcpy(newDir->name, basename);
-    newDir->nodeType = 'D';
+    newDir->type = 'D';
     newDir->siblingPtr = newDir->parentPtr = newDir->childPtr = 0;
     return newDir;
 }
@@ -20,7 +20,7 @@ NODE* newDirectoryNode(char *basename){
 NODE* newFileNode(char *basename){
     NODE* newFile = (NODE *)malloc(sizeof(NODE));
     strcpy(newFile->name, basename);
-    newFile->nodeType = 'F';
+    newFile->type = 'F';
     newFile->siblingPtr = newFile->parentPtr = newFile->childPtr = 0;
     return newFile;
 }
